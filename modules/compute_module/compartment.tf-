@@ -1,0 +1,33 @@
+data "oci_identity_compartments" "compartment" {
+  compartment_id                   = var.tenancy_ocid
+  compartment_id_in_subtree        = true
+  name                             = var.compartment_name
+  state                            = "ACTIVE"
+}
+
+locals {
+  compartment_id                   = data.oci_identity_compartments.compartment.compartments[0].id
+}
+
+data "oci_identity_compartments" "nsg_compartment" {
+  compartment_id                   = var.tenancy_ocid
+  compartment_id_in_subtree        = true
+  name                             = var.nsg_compartment_name
+  state                            = "ACTIVE"
+}
+
+locals {
+  nsg_compartment_id               = data.oci_identity_compartments.nsg_compartment.compartments[0].id
+}
+
+data "oci_identity_compartments" "image_compartment" {
+  compartment_id                   = var.tenancy_ocid
+  compartment_id_in_subtree        = true
+  name                             = var.image_compartment_name
+  state                            = "ACTIVE"
+}
+
+locals {
+  image_compartment_id             = data.oci_identity_compartments.image_compartment.compartments[0].id
+}
+

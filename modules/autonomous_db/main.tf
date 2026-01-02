@@ -1,0 +1,64 @@
+resource "oci_database_autonomous_database" "autonomous_database" {
+  admin_password                                     = var.admin_password
+  compartment_id                                     = local.compartment_id
+  db_name                                            = var.db_name
+  are_primary_whitelisted_ips_used                   = var.are_primary_whitelisted_ips_used
+  auto_refresh_frequency_in_seconds                  = var.auto_refresh_frequency_in_seconds
+  auto_refresh_point_lag_in_seconds                  = var.auto_refresh_point_lag_in_seconds
+  autonomous_maintenance_schedule_type               = var.autonomous_maintenance_schedule_type
+  backup_retention_period_in_days                    = var.backup_retention_period_in_days
+  character_set                                      = var.character_set
+  compute_count                                      = var.compute_count
+  compute_model                                      = var.compute_model
+  cpu_core_count                                     = var.cpu_core_count
+  dynamic "customer_contacts" {
+    for_each                                         = var.customer_contacts_emails
+    content {
+      email                                          = customer_contacts.value
+    }
+  }
+  data_safe_status                                   = var.data_safe_status
+  data_storage_size_in_gb                            = var.data_storage_size_in_gb
+  database_edition                                   = var.database_edition
+  db_version                                         = var.db_version
+  db_workload                                        = var.db_workload
+  disaster_recovery_type                             = var.disaster_recovery_type
+  display_name                                       = var.display_name
+  in_memory_percentage                               = var.in_memory_percentage
+  is_backup_retention_locked                         = var.is_backup_retention_locked
+  is_data_guard_enabled                              = var.is_data_guard_enabled
+  is_dedicated                                       = var.is_dedicated
+  is_dev_tier                                        = var.is_dev_tier
+  is_free_tier                                       = var.is_free_tier
+  is_local_data_guard_enabled                        = var.is_local_data_guard_enabled
+  is_mtls_connection_required                        = var.is_mtls_connection_required
+  is_replicate_automatic_backups                     = var.is_replicate_automatic_backups
+  kms_key_id                                         = var.kms_key_id
+  license_model                                      = var.license_model
+  max_cpu_core_count                                 = var.max_cpu_core_count
+  ncharacter_set                                     = var.ncharacter_set
+  nsg_ids                                            = var.nsg_ids
+  ocpu_count                                         = var.ocpu_count
+  private_endpoint_label                             = var.private_endpoint_label
+  refreshable_mode                                   = var.refreshable_mode
+  resource_pool_summary {
+    is_disabled                                      = var.resource_pool_summary_is_disabled
+    pool_size                                        = var.resource_pool_summary_pool_size
+  }
+  dynamic "scheduled_operations" {
+    for_each                                         = var.scheduled_operations
+    content {
+      day_of_week {
+        name                                         = scheduled_operations.value["day_of_week_name"]
+      }
+      scheduled_start_time                           = scheduled_operations.value["start_time"]
+      scheduled_stop_time                            = scheduled_operations.value["stop_time"]
+    }
+  }
+  standby_whitelisted_ips                            = var.standby_whitelisted_ips
+  subnet_id                                          = var.subnet_id
+  subscription_id                                    = var.subscription_id
+  time_of_auto_refresh_start                         = var.time_of_auto_refresh_start
+  timestamp                                          = var.timestamp
+  whitelisted_ips                                    = var.whitelisted_ips
+}

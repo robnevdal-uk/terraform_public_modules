@@ -1,0 +1,25 @@
+data "oci_core_subnets" "subnet" {
+  for_each                         = { for i,s in local.subnet_details : i => s}
+  display_name                     = each.value["subnet_name"]
+  compartment_id                   = each.value["compartment_id"]
+}
+
+data "oci_identity_compartments" "subnet_compartment" {
+  compartment_id                   = var.tenancy_ocid
+  compartment_id_in_subtree        = "true"
+  state                            = "ACTIVE"
+}
+
+locals {
+  all_comps                        = { for i in data.oci_identity_compartments.subnet_compartment : i.name => i.id }
+  subnet_details                   = { for k,v in var.subnet_details : k => {
+                                                                             subnet_name = v.subnet_name
+                                                                             compartment_id = lookup(local.all_comps.v.subnet_compartment_name)
+                                                                            }
+                                     }
+  subnet_ids                       = { for k,v in local.subnet_details : k => {
+                                                                               subnet_id = data.oci_core_subnets.subnet[k].subnets[*].id
+                                                                              }
+                                     }
+  subnet_ocids                     = flatten([ for v in local.subnet_ids : v.subnet_id ])
+}
